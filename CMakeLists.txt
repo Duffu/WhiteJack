@@ -30,6 +30,9 @@ set(SOURCE_FILES
 
   src/states/StateGameplay.cpp
   src/states/StateMainMenu.cpp
+
+
+  src/managers/ResourceManager.cpp
  
 )
 
