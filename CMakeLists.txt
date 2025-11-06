@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # -----------------------------------------------------------
-# --- WEB BUILD FIX: PART 1 (Configure Raylib) ---
+# --- (Configure Raylib) ---
 #
 if(EMSCRIPTEN)
  set(PLATFORM "Web" CACHE STRING "Raylib platform" FORCE)
@@ -30,9 +30,12 @@ set(SOURCE_FILES
 
   src/states/StateGameplay.cpp
   src/states/StateMainMenu.cpp
+  
 
 
   src/managers/ResourceManager.cpp
+  src/managers/UIManager.cpp
+
  
 )
 
@@ -49,7 +52,7 @@ target_include_directories(WhiteJack PUBLIC
 target_link_libraries(WhiteJack PRIVATE raylib)
 
 # -----------------------------------------------------------
-# --- WEB BUILD FIX: PART 2 (Force Global Linker Flags) ---
+# --- (Force Global Linker Flags) ---
 #
 #
 if(EMSCRIPTEN)

@@ -1,0 +1,30 @@
+#include "UIManager.h"
+
+UIManager::UIManager()
+{
+}
+UIManager::~UIManager()
+{
+}
+void UIManager::DrawHand(Hand &hand, Vector2 position)
+{
+    const float cardOffsetX = 40.0f;
+    for (auto &card : hand.GetCards())
+    {
+        Texture2D tex = ResourceManager::GetInstance().GetTexture(card);
+
+        DrawTexture(tex, (int)position.x, (int)position.y, WHITE);
+
+        position.x += cardOffsetX;
+    }
+}
+
+void UIManager::DrawMeter()
+{
+    // Implementation for drawing a meter (e.g., health, score) can be added here
+}
+void UIManager::DrawValue(int value, Vector2 position)
+{
+    std::string valueText = "Value: " + std::to_string(value);
+    DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
+}

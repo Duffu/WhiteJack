@@ -3,6 +3,7 @@
 #include "game/Deck.h"
 #include "game/Player.h"
 #include "game/Client.h"
+#include "managers/UIManager.h"
 
 enum class RoundPhase
 {
@@ -18,6 +19,10 @@ private:
     Player m_player;
     Client m_client;
     RoundPhase m_currentPhase;
+    UIManager m_uiManager;
+    float m_aiDecisionTimer = 0.5f;
+    bool m_roundResolved;
+    float m_resolveTimer;
 
 public:
     StateGameplay();

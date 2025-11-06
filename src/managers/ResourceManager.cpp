@@ -21,11 +21,13 @@ ResourceManager::ResourceManager()
         {
             continue;
         }
+
         std::string cardRank;
         std::string cardSuit;
         std::string initialNumber;
         std::string textureName;
         std::string filePath;
+
         if (i <= 13)
         {
             cardSuit = "hearts";

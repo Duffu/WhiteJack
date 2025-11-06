@@ -49,6 +49,7 @@ void Game::Update(float dt)
 void Game::Draw()
 {
     BeginDrawing();
+    ClearBackground(BLACK);
     if (m_currentState)
     {
         m_currentState->Draw();
@@ -64,7 +65,7 @@ void Game::ChangeState(IGameState *newState)
         delete m_currentState;
     }
 
-    m_currentState = newState;
+        m_currentState = newState;
 
     if (m_currentState)
     {

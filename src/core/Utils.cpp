@@ -11,15 +11,15 @@ std::string SuitToString(Suit suit)
     switch (suit)
     {
     case Suit::HEARTS:
-        return "Hearts";
+        return "hearts";
     case Suit::DIAMONDS:
-        return "Diamonds";
+        return "diamonds";
     case Suit::CLUBS:
-        return "Clubs";
+        return "clubs";
     case Suit::SPADES:
-        return "Spades";
+        return "spades";
     default:
-        return "Unknown";
+        return "unknown";
     }
 }
 std::string RankToString(Rank rank)
@@ -89,4 +89,13 @@ Suit GetSuitFromInt(int value)
     default:
         break;
     }
+}
+
+void Delay(float delayTime, float dt)
+{
+    if (delayTime >= 0.0f)
+    {
+        delayTime = dt;
+    }
+    return;
 }

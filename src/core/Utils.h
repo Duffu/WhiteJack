@@ -4,5 +4,7 @@
 
 int getRandomInt(int min, int max);
 std::string SuitToString(Suit suit);
-std::string ValueToString(Rank rank);
+std::string RankToString(Rank rank);
 int GetSuitFileBase(Suit suit);
+Suit GetSuitFromInt(int value);
+void Delay(float delayTime, float dt);
