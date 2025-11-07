@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "raylib.h"
 int getRandomInt(int min, int max)
 {
     static std::random_device rd;
@@ -91,11 +92,18 @@ Suit GetSuitFromInt(int value)
     }
 }
 
-void Delay(float delayTime, float dt)
+void StartTimer(Timer &timer, float duration)
 {
-    if (delayTime >= 0.0f)
+    timer.lifetime = duration;
+}
+void UpdateTimer(Timer &timer, float dt)
+{
+    if (timer.lifetime > 0.0f)
     {
-        delayTime = dt;
+        timer.lifetime -= dt;
     }
-    return;
+}
+bool TimerDone(const Timer &timer)
+{
+    return timer.lifetime <= 0.0f;
 }

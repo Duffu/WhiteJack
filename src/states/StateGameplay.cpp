@@ -14,6 +14,9 @@ void StateGameplay::Update(float dt)
 {
     switch (m_currentPhase)
     {
+    case RoundPhase::DEALING:
+        UpdateDealing(dt);
+        break;
     case RoundPhase::CLIENT_TURN:
         UpdateClientTurn(dt);
         break;
@@ -33,6 +36,19 @@ void StateGameplay::Draw()
     m_uiManager.DrawHand(m_client.getHand(), {500, 100});
     m_uiManager.DrawValue(m_player.getHand().GetValue(), {800, 550});
     m_uiManager.DrawValue(m_client.getHand().GetValue(), {800, 150});
+
+    switch (m_winState)
+    {
+    case WinState::PLAYER_WON:
+        m_uiManager.DrawRoundWon({50, 400});
+        break;
+    case WinState::PLAYER_LOST:
+        m_uiManager.DrawRoundLost({50, 400});
+        break;
+    case WinState::PUSH:
+        m_uiManager.DrawRoundPush({50, 400});
+        break;
+    }
 }
 
 void StateGameplay::OnEnter()
@@ -44,14 +60,27 @@ void StateGameplay::OnExit()
 }
 void StateGameplay::UpdateClientTurn(float dt)
 {
-    while (m_client.getHand().GetValue() < 16 || getRandomInt(0, 100) <= 10) // Simple AI: hit if under 16 or 10% chance to hit otherwise (more about randomness later)
+    UpdateTimer(m_aiDecisionTimer, dt);
+
+    if (!TimerDone(m_aiDecisionTimer))
+    {
+        return; // AI is thinking don't do anythink
+    }
+
+    if (m_client.getHand().GetValue() < 16 || getRandomInt(0, 100) <= 10)
     {
         m_client.getHand().AddCard(m_deck.DealCard());
-        Delay(m_aiDecisionTimer, dt); // Simulate thinking time
         m_client.getHand().GetLastCard().FlipCard();
+        StartTimer(m_aiDecisionTimer, 1.0f);
     }
-    m_aiDecisionTimer = 0.5f; // Reset timer for next decision
-    m_currentPhase = RoundPhase::PLAYER_TURN;
+    else if (m_client.getHand().GetValue() > 21)
+    {
+        m_currentPhase = RoundPhase::RESOLVE;
+    }
+    else
+    {
+        m_currentPhase = RoundPhase::PLAYER_TURN;
+    }
 }
 
 void StateGameplay::UpdatePlayerTurn(float dt)
@@ -84,39 +113,85 @@ void StateGameplay::UpdatePlayerTurn(float dt)
 
 void StateGameplay::UpdateResolve(float dt)
 {
-    if (!m_roundResolved)
+
+    int playerValue = m_player.getHand().GetValue();
+    int clientValue = m_client.getHand().GetValue();
+
+    if (m_winState == WinState::NONE)
     {
-        // --- This is all your old win/loss logic ---
         int playerValue = m_player.getHand().GetValue();
         int clientValue = m_client.getHand().GetValue();
 
         if (playerValue > 21)
-        { /* Player busts */
+        {
+            m_winState = WinState::PLAYER_LOST;
         }
         else if (clientValue > 21)
-        { /* Client busts */
+        {
+            m_winState = WinState::PLAYER_WON;
         }
         else if (playerValue > clientValue)
-        { /* Player wins */
+        {
+            m_winState = WinState::PLAYER_WON;
         }
         else if (clientValue > playerValue)
-        { /* Client wins */
+        {
+            m_winState = WinState::PLAYER_LOST;
         }
         else
-        { /* Tie */
+        {
+            m_winState = WinState::PUSH;
         }
 
-        m_roundResolved = true;
-        m_resolveTimer = 0.2f;
+        // Start the pause timer
+        StartTimer(m_resolveTimer, 2.0f);
     }
 
+    // Now, we wait for the timer to finish
+    UpdateTimer(m_resolveTimer, dt);
+    if (TimerDone(m_resolveTimer))
+    {
+        StartNewRound();
+    }
+}
+void StateGameplay::UpdateDealing(float dt)
+{
+    UpdateTimer(m_dealTimer, dt);
+
+    if (!TimerDone(m_dealTimer))
+    {
+        return;
+    }
+
+    switch (m_cardsDealtCount)
+    {
+    case 0:
+        m_client.getHand().AddCard(m_deck.DealCard());
+        m_client.getHand().GetLastCard().FlipCard();
+        break;
+    case 1:
+        m_player.getHand().AddCard(m_deck.DealCard());
+        m_player.getHand().GetLastCard().FlipCard();
+        break;
+    case 2:
+        m_client.getHand().AddCard(m_deck.DealCard());
+        m_client.getHand().GetLastCard().FlipCard();
+        break;
+    case 3:
+        m_player.getHand().AddCard(m_deck.DealCard());
+        break;
+    }
+
+    m_cardsDealtCount++;
+
+    if (m_cardsDealtCount >= 4)
+    {
+        m_currentPhase = RoundPhase::CLIENT_TURN;
+        StartTimer(m_aiDecisionTimer, 1.0f);
+    }
     else
     {
-        m_resolveTimer -= dt;
-        if (m_resolveTimer <= 0.0f)
-        {
-            StartNewRound();
-        }
+        StartTimer(m_dealTimer, 0.5f);
     }
 }
 
@@ -126,18 +201,8 @@ void StateGameplay::StartNewRound()
     m_client.getHand().Clear();
     m_deck.Shuffle();
 
+    m_winState = WinState::NONE;
     m_currentPhase = RoundPhase::DEALING;
-
-    m_client.getHand().AddCard(m_deck.DealCard());
-    m_client.getHand().GetLastCard().FlipCard();
-    m_client.getHand().AddCard(m_deck.DealCard());
-    m_client.getHand().GetLastCard().FlipCard();
-
-    m_player.getHand().AddCard(m_deck.DealCard());
-    m_player.getHand().GetLastCard().FlipCard();
-    m_player.getHand().AddCard(m_deck.DealCard());
-
-    m_currentPhase = RoundPhase::CLIENT_TURN;
-    m_aiDecisionTimer = 0.5f;
-    m_roundResolved = false;
+    m_cardsDealtCount = 0;
+    StartTimer(m_dealTimer, 0.5f);
 }

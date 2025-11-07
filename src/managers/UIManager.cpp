@@ -28,3 +28,24 @@ void UIManager::DrawValue(int value, Vector2 position)
     std::string valueText = "Value: " + std::to_string(value);
     DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
 }
+
+void UIManager::DrawGameOver(Vector2 position)
+{
+    std::string valueText = "GAME OVER";
+    DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
+}
+void UIManager::DrawRoundLost(Vector2 position)
+{
+    std::string valueText = "CLIENT WIN";
+    DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
+}
+void UIManager::DrawRoundWon(Vector2 position)
+{
+    std::string valueText = "DEALER WIN";
+    DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
+}
+void UIManager::DrawRoundPush(Vector2 position)
+{
+    std::string valueText = "PUSH";
+    DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
+}

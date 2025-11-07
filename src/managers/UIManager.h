@@ -18,4 +18,8 @@ public:
     void DrawMessage(const std::string &message, Vector2 position);
     void DrawButton(const std::string &label, Vector2 position, Vector2 size);
     void DrawMoney(int amount, Vector2 position);
+    void DrawGameOver(Vector2 position);
+    void DrawRoundLost(Vector2 position);
+    void DrawRoundWon(Vector2 position);
+    void DrawRoundPush(Vector2 position);
 };

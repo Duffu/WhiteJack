@@ -4,6 +4,7 @@
 #include "game/Player.h"
 #include "game/Client.h"
 #include "managers/UIManager.h"
+#include "utils.h"
 
 enum class RoundPhase
 {
@@ -12,6 +13,13 @@ enum class RoundPhase
     PLAYER_TURN,
     RESOLVE
 };
+enum class WinState
+{
+    NONE,
+    PLAYER_WON,
+    PLAYER_LOST,
+    PUSH
+};
 class StateGameplay : public IGameState
 {
 private:
@@ -19,10 +27,12 @@ private:
     Player m_player;
     Client m_client;
     RoundPhase m_currentPhase;
+    WinState m_winState;
     UIManager m_uiManager;
-    float m_aiDecisionTimer = 0.5f;
-    bool m_roundResolved;
-    float m_resolveTimer;
+    Timer m_aiDecisionTimer;
+    Timer m_resolveTimer;
+    Timer m_dealTimer;
+    int m_cardsDealtCount = 0;
 
 public:
     StateGameplay();
@@ -36,5 +46,6 @@ private:
     void UpdateClientTurn(float dt);
     void UpdatePlayerTurn(float dt);
     void UpdateResolve(float dt);
+    void UpdateDealing(float dt);
     void StartNewRound();
 };

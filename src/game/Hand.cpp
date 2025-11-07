@@ -15,10 +15,13 @@ int Hand::GetValue() const
     int aceCount = 0;
     for (const auto &card : m_cards)
     {
-        totalValue += card.GetValue();
-        if (card.GetRank() == Rank::ACE)
+        if (card.getIsFaceUp())
         {
-            aceCount++;
+            totalValue += card.GetValue();
+            if (card.GetRank() == Rank::ACE)
+            {
+                aceCount++;
+            }
         }
     }
     // Handle Aces as 11 if it doesn't bust the hand
