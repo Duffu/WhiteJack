@@ -3,28 +3,28 @@
 #include <iostream>
 #include <random>
 #include "core/Utils.h"
-
+#include "core/Game.h"
 StateGameplay::StateGameplay()
 {
 }
 StateGameplay::~StateGameplay()
 {
 }
-void StateGameplay::Update(float dt)
+void StateGameplay::Update(float dt, Game *game)
 {
     switch (m_currentPhase)
     {
     case RoundPhase::DEALING:
-        UpdateDealing(dt);
+        UpdateDealing(dt, game);
         break;
     case RoundPhase::CLIENT_TURN:
-        UpdateClientTurn(dt);
+        UpdateClientTurn(dt, game);
         break;
     case RoundPhase::PLAYER_TURN:
-        UpdatePlayerTurn(dt);
+        UpdatePlayerTurn(dt, game);
         break;
     case RoundPhase::RESOLVE:
-        UpdateResolve(dt);
+        UpdateResolve(dt, game);
         break;
     default:
         break;
@@ -36,6 +36,12 @@ void StateGameplay::Draw()
     m_uiManager.DrawHand(m_client.getHand(), {500, 100});
     m_uiManager.DrawValue(m_player.getHand().GetValue(), {800, 550});
     m_uiManager.DrawValue(m_client.getHand().GetValue(), {800, 150});
+    Rectangle patienceBar = {100, 50, 200, 30};
+    m_uiManager.DrawMeter(
+        m_client.getPatience(),
+        m_client.getMaxPatience(),
+        patienceBar,
+        RED);
 
     switch (m_winState)
     {
@@ -58,7 +64,7 @@ void StateGameplay::OnEnter()
 void StateGameplay::OnExit()
 {
 }
-void StateGameplay::UpdateClientTurn(float dt)
+void StateGameplay::UpdateClientTurn(float dt, Game *game)
 {
     UpdateTimer(m_aiDecisionTimer, dt);
 
@@ -83,7 +89,7 @@ void StateGameplay::UpdateClientTurn(float dt)
     }
 }
 
-void StateGameplay::UpdatePlayerTurn(float dt)
+void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
 {
     /*
     Player is given the freedom to Hit or Stand or Flip
@@ -111,7 +117,7 @@ void StateGameplay::UpdatePlayerTurn(float dt)
     }
 }
 
-void StateGameplay::UpdateResolve(float dt)
+void StateGameplay::UpdateResolve(float dt, Game *game)
 {
 
     int playerValue = m_player.getHand().GetValue();
@@ -124,22 +130,42 @@ void StateGameplay::UpdateResolve(float dt)
 
         if (playerValue > 21)
         {
+            m_client.modifyPatience(15);
             m_winState = WinState::PLAYER_LOST;
         }
         else if (clientValue > 21)
         {
+            m_client.modifyPatience(-20);
+            if (m_client.getPatience() <= 0)
+            {
+                game->ChangeState(new StateGameOver());
+            }
+
             m_winState = WinState::PLAYER_WON;
         }
         else if (playerValue > clientValue)
         {
+            m_client.modifyPatience(-10);
+            if (m_client.getPatience() <= 0)
+            {
+                game->ChangeState(new StateGameOver());
+            }
+
             m_winState = WinState::PLAYER_WON;
         }
         else if (clientValue > playerValue)
         {
+            m_client.modifyPatience(10);
             m_winState = WinState::PLAYER_LOST;
         }
         else
         {
+            m_client.modifyPatience(-5);
+            if (m_client.getPatience() <= 0)
+            {
+                game->ChangeState(new StateGameOver());
+            }
+
             m_winState = WinState::PUSH;
         }
 
@@ -154,7 +180,7 @@ void StateGameplay::UpdateResolve(float dt)
         StartNewRound();
     }
 }
-void StateGameplay::UpdateDealing(float dt)
+void StateGameplay::UpdateDealing(float dt, Game *game)
 {
     UpdateTimer(m_dealTimer, dt);
 

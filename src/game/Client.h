@@ -7,7 +7,9 @@ private:
     int m_credits;
     Hand m_hand;
     int m_patience;
+    int m_maxPatience;
     int m_Attention;
+    int m_maxAttention;
 
 public:
     Client();
@@ -18,6 +20,10 @@ public:
     Hand &getHand() { return m_hand; }
     int getPatience() const { return m_patience; }
     void setPatience(int patience) { m_patience = patience; }
-    int setAttention() const { return m_Attention; }
+    void modifyPatience(float amount);
+    int getAttention() const { return m_Attention; }
     void setAttention(int attention) { m_Attention = attention; }
+    void modifyAttention(float amount);
+
+    int getMaxPatience() const { return m_maxPatience; }
 };

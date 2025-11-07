@@ -19,9 +19,15 @@ void UIManager::DrawHand(Hand &hand, Vector2 position)
     }
 }
 
-void UIManager::DrawMeter()
+void UIManager::DrawMeter(float current, float max, Rectangle bounds, Color color)
 {
-    // Implementation for drawing a meter (e.g., health, score) can be added here
+    DrawRectangleRec(bounds, GRAY);
+
+    float percentage = current / max;
+    Rectangle filledBounds = bounds;
+    filledBounds.width = bounds.width * percentage;
+
+    DrawRectangleRec(filledBounds, color);
 }
 void UIManager::DrawValue(int value, Vector2 position)
 {

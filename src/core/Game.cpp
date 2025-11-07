@@ -38,7 +38,7 @@ void Game::Run()
         float dt = GetFrameTime();
         if (m_currentState)
         {
-            m_currentState->Update(dt);
+            m_currentState->Update(dt, this);
         }
         Draw();
     }
@@ -65,7 +65,7 @@ void Game::ChangeState(IGameState *newState)
         delete m_currentState;
     }
 
-        m_currentState = newState;
+    m_currentState = newState;
 
     if (m_currentState)
     {

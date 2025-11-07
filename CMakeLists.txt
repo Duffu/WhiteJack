@@ -30,6 +30,8 @@ set(SOURCE_FILES
 
   src/states/StateGameplay.cpp
   src/states/StateMainMenu.cpp
+  src/states/StateGameOver.cpp
+
   
 
 

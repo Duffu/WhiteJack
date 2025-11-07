@@ -5,7 +5,7 @@
 #include "game/Client.h"
 #include "managers/UIManager.h"
 #include "utils.h"
-
+#include "StateGameOver.h"
 enum class RoundPhase
 {
     DEALING,
@@ -20,6 +20,7 @@ enum class WinState
     PLAYER_LOST,
     PUSH
 };
+
 class StateGameplay : public IGameState
 {
 private:
@@ -37,15 +38,15 @@ private:
 public:
     StateGameplay();
     ~StateGameplay() override;
-    void Update(float dt) override;
+    void Update(float dt, Game *game) override;
     void Draw() override;
     void OnEnter() override;
     void OnExit() override;
 
 private:
-    void UpdateClientTurn(float dt);
-    void UpdatePlayerTurn(float dt);
-    void UpdateResolve(float dt);
-    void UpdateDealing(float dt);
+    void UpdateClientTurn(float dt, Game *game);
+    void UpdatePlayerTurn(float dt, Game *game);
+    void UpdateResolve(float dt, Game *game);
+    void UpdateDealing(float dt, Game *game);
     void StartNewRound();
 };

@@ -11,7 +11,7 @@ public:
     UIManager();
     ~UIManager();
     void DrawHand(Hand &hand, Vector2 position);
-    void DrawMeter();
+    void DrawMeter(float current, float max, Rectangle bounds, Color color);
     void DrawValue(int value, Vector2 position);
     void DrawHeartMeter(int currentHealth, int maxHealth, Vector2 position);
     void DrawScore(int score, Vector2 position);
