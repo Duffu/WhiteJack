@@ -22,4 +22,5 @@ public:
     void DrawRoundLost(Vector2 position);
     void DrawRoundWon(Vector2 position);
     void DrawRoundPush(Vector2 position);
+    void DrawHealthBar(int current, int max, Vector2 position);
 };

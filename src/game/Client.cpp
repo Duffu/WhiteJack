@@ -7,5 +7,9 @@ Client::~Client()
 }
 void Client::modifyPatience(float amount)
 {
+    if (m_patience == m_maxPatience)
+    {
+        return;
+    }
     m_patience += amount;
 }

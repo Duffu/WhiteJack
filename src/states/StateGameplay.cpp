@@ -42,6 +42,10 @@ void StateGameplay::Draw()
         m_client.getMaxPatience(),
         patienceBar,
         RED);
+    m_uiManager.DrawHealthBar(
+        m_player.getTrustHearts(),
+        m_player.getMaxTrustHearts(),
+        {1100, 50});
 
     switch (m_winState)
     {
@@ -103,12 +107,23 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
     }
     if (IsKeyPressed(KEY_H) && m_player.getHand().GetLastCard().getIsFaceUp() == true)
     {
-        m_player.getHand().AddCard(m_deck.DealCard());
-        m_player.getHand().GetLastCard().FlipCard();
-
-        if (m_player.getHand().GetValue() > 21)
+        if (m_player.getHand().GetValue() >= 17)
         {
-            m_currentPhase = RoundPhase::RESOLVE;
+            m_player.modifyTrustHearts(-1);
+            if (CheckGameOverConditions(game))
+            {
+                return;
+            }
+        }
+        else
+        {
+            m_player.getHand().AddCard(m_deck.DealCard());
+            m_player.getHand().GetLastCard().FlipCard();
+
+            if (m_player.getHand().GetValue() > 21)
+            {
+                m_currentPhase = RoundPhase::RESOLVE;
+            }
         }
     }
     else if (IsKeyPressed(KEY_S))
@@ -136,9 +151,9 @@ void StateGameplay::UpdateResolve(float dt, Game *game)
         else if (clientValue > 21)
         {
             m_client.modifyPatience(-20);
-            if (m_client.getPatience() <= 0)
+            if (CheckGameOverConditions(game))
             {
-                game->ChangeState(new StateGameOver());
+                return;
             }
 
             m_winState = WinState::PLAYER_WON;
@@ -146,9 +161,9 @@ void StateGameplay::UpdateResolve(float dt, Game *game)
         else if (playerValue > clientValue)
         {
             m_client.modifyPatience(-10);
-            if (m_client.getPatience() <= 0)
+            if (CheckGameOverConditions(game))
             {
-                game->ChangeState(new StateGameOver());
+                return;
             }
 
             m_winState = WinState::PLAYER_WON;
@@ -161,9 +176,9 @@ void StateGameplay::UpdateResolve(float dt, Game *game)
         else
         {
             m_client.modifyPatience(-5);
-            if (m_client.getPatience() <= 0)
+            if (CheckGameOverConditions(game))
             {
-                game->ChangeState(new StateGameOver());
+                return;
             }
 
             m_winState = WinState::PUSH;
@@ -173,7 +188,7 @@ void StateGameplay::UpdateResolve(float dt, Game *game)
         StartTimer(m_resolveTimer, 2.0f);
     }
 
-    // Now, we wait for the timer to finish
+    // wait for the timer to finish
     UpdateTimer(m_resolveTimer, dt);
     if (TimerDone(m_resolveTimer))
     {
@@ -231,4 +246,20 @@ void StateGameplay::StartNewRound()
     m_currentPhase = RoundPhase::DEALING;
     m_cardsDealtCount = 0;
     StartTimer(m_dealTimer, 0.5f);
+}
+
+bool StateGameplay::CheckGameOverConditions(Game *game)
+{
+    if (m_client.getPatience() <= 0)
+    {
+        game->ChangeState(new StateGameOver());
+        return true;
+    }
+    if (m_player.getTrustHearts() <= 0)
+    {
+        game->ChangeState(new StateGameOver());
+        return true;
+    }
+    // TODO ATTENTION
+    return false;
 }

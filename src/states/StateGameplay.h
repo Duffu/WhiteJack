@@ -49,4 +49,5 @@ private:
     void UpdateResolve(float dt, Game *game);
     void UpdateDealing(float dt, Game *game);
     void StartNewRound();
+    bool CheckGameOverConditions(Game *game);
 };

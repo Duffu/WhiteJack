@@ -2,6 +2,8 @@
 ResourceManager::ResourceManager()
 {
     LoadTexture("card_back", "assets/card_Back.png");
+    LoadTexture("full_heart", "assets/FULLHEART.png");
+    LoadTexture("empty_heart", "assets/EMPTYHEART.png");
     // 55 cause the nice guy who made the assets decided to put one of the back, front and empty texture after each rank
     // so we have to skip 14 28 42
     /* current set

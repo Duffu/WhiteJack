@@ -55,3 +55,25 @@ void UIManager::DrawRoundPush(Vector2 position)
     std::string valueText = "PUSH";
     DrawText(valueText.c_str(), position.x, position.y, 20, WHITE);
 }
+void UIManager::DrawHealthBar(int current, int max, Vector2 position)
+{
+    const float heartOffsetX = 60.0f;
+
+    for (int i = 0; i < max; ++i)
+    {
+        Texture2D tex;
+
+        if (i < current)
+        {
+            tex = ResourceManager::GetInstance().GetTexture("full_heart");
+        }
+        else
+        {
+            tex = ResourceManager::GetInstance().GetTexture("empty_heart");
+        }
+
+        DrawTexture(tex, (int)position.x, (int)position.y, WHITE);
+
+        position.x += heartOffsetX;
+    }
+}
