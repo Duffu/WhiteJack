@@ -3,7 +3,6 @@
 #include "ICheat.h"
 #include "raylib.h"
 #include "managers/UIManager.h"
-#include "game/Player.h"
 
 class PeekHoleCard : public ICheat
 {

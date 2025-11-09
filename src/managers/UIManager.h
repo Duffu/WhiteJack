@@ -26,4 +26,5 @@ public:
     void DrawPeekedCard(Card card, Vector2 position, float opacityMultiplier);
     void DrawBar(int posX, int posY, int width, int height);
     void DrawArrow(int posX, int posY, int width, int height);
+    void DrawCardBack(int posX, int posY);
 };

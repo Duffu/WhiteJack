@@ -86,6 +86,8 @@ void Peek::Update(float dt)
 }
 void Peek::Draw(UIManager &uiManager)
 {
+    std::string timeText = "Time: " + std::to_string(m_gameTimer.lifetime);
+    DrawText(timeText.c_str(), 20, 680, 30, RED);
     if (m_currentState == CheatState::RUNNING)
     {
         DrawRectangleRec(m_bar, GRAY);

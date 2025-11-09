@@ -4,7 +4,7 @@
 #include <random>
 #include "core/Utils.h"
 #include "core/Game.h"
-StateGameplay::StateGameplay() : m_peek(m_deck), m_peekHoleCard(m_player)
+StateGameplay::StateGameplay() : m_peek(m_deck), m_peekHoleCard(m_player), m_swap(m_deck, m_player)
 {
 }
 StateGameplay::~StateGameplay()
@@ -177,6 +177,9 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
     }
     else if (IsKeyPressed(KEY_L))
     {
+        m_currentCheat = &m_swap;
+        m_currentCheat->Start();
+        m_currentPhase = RoundPhase::CHEATING;
     }
 }
 void StateGameplay::UpdateCheating(float dt, Game *game)

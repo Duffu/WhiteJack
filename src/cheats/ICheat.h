@@ -20,7 +20,7 @@ enum class ArrowState
 enum class PoppedCardState
 {
     SHOW,
-    Hide
+    HIDE
 };
 class ICheat
 {

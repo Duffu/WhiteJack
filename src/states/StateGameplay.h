@@ -9,6 +9,7 @@
 #include "cheats/ICheat.h"
 #include "cheats/Peek.h"
 #include "cheats/PeekHoleCard.h"
+#include "cheats/Swap.h"
 enum class RoundPhase
 {
     DEALING,
@@ -42,6 +43,7 @@ private:
     int m_cardsDealtCount = 0;
     Peek m_peek;
     PeekHoleCard m_peekHoleCard;
+    Swap m_swap;
     ICheat *m_currentCheat;
 
 public:

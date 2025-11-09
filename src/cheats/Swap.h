@@ -3,29 +3,25 @@
 #include "ICheat.h"
 #include "raylib.h"
 #include "managers/UIManager.h"
-class Peek : public ICheat
+class Swap : public ICheat
 {
 
 private:
     Player &m_player;
     Deck &m_deck;
     CheatState m_currentState;
-    ArrowState m_arrowState;
-    float opacityMultiplier;
-
-    Rectangle m_bar;
-    Rectangle m_successZone;
-    Rectangle m_arrow;
-
-    float m_cardPopSpeed;
-    float m_arrowBaroffset;
+    Rectangle m_target;
+    float m_cardPopSpeed = 0.5f;
+    int m_clickScore;
 
     Timer m_gameTimer;
-    Timer m_pauseTimer;
+    Timer m_cardPopTimer;
+
+    void MoveTargetCard();
 
 public:
-    Peek(Deck &deck);
-    ~Peek() override;
+    Swap(Deck &deck, Player &player);
+    ~Swap() override;
     void Start();
     void Update(float dt) override;
     void Draw(UIManager &uiManager) override;

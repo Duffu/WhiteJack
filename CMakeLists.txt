@@ -33,6 +33,8 @@ set(SOURCE_FILES
 
   src/cheats/Peek.cpp
   src/cheats/PeekHoleCard.cpp
+  src/cheats/Swap.cpp
+
 
 
 

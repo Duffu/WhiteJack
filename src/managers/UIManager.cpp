@@ -84,3 +84,9 @@ void UIManager::DrawPeekedCard(Card card, Vector2 position, float opacityMultipl
     Texture2D tex = ResourceManager::GetInstance().GetTexture(card);
     DrawTexture(tex, (int)position.x, (int)position.y, Fade(WHITE, opacityMultiplier));
 }
+
+void UIManager::DrawCardBack(int posX, int posY)
+{
+    Texture2D tex = ResourceManager::GetInstance().GetTexture("card_back");
+    DrawTexture(tex, posX, posY, WHITE);
+}
