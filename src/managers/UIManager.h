@@ -23,4 +23,7 @@ public:
     void DrawRoundWon(Vector2 position);
     void DrawRoundPush(Vector2 position);
     void DrawHealthBar(int current, int max, Vector2 position);
+    void DrawPeekedCard(Card card, Vector2 position, float opacityMultiplier);
+    void DrawBar(int posX, int posY, int width, int height);
+    void DrawArrow(int posX, int posY, int width, int height);
 };

@@ -77,3 +77,10 @@ void UIManager::DrawHealthBar(int current, int max, Vector2 position)
         position.x += heartOffsetX;
     }
 }
+
+void UIManager::DrawPeekedCard(Card card, Vector2 position, float opacityMultiplier)
+{
+
+    Texture2D tex = ResourceManager::GetInstance().GetTexture(card);
+    DrawTexture(tex, (int)position.x, (int)position.y, Fade(WHITE, opacityMultiplier));
+}

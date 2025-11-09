@@ -6,12 +6,17 @@
 #include "managers/UIManager.h"
 #include "utils.h"
 #include "StateGameOver.h"
+#include "cheats/ICheat.h"
+#include "cheats/Peek.h"
+#include "cheats/PeekHoleCard.h"
 enum class RoundPhase
 {
     DEALING,
     CLIENT_TURN,
     PLAYER_TURN,
-    RESOLVE
+    RESOLVE,
+    CHEATING,
+    PLANNING
 };
 enum class WinState
 {
@@ -33,7 +38,11 @@ private:
     Timer m_aiDecisionTimer;
     Timer m_resolveTimer;
     Timer m_dealTimer;
+    Timer m_planningTimer;
     int m_cardsDealtCount = 0;
+    Peek m_peek;
+    PeekHoleCard m_peekHoleCard;
+    ICheat *m_currentCheat;
 
 public:
     StateGameplay();
@@ -48,6 +57,8 @@ private:
     void UpdatePlayerTurn(float dt, Game *game);
     void UpdateResolve(float dt, Game *game);
     void UpdateDealing(float dt, Game *game);
+    void UpdateCheating(float dt, Game *game);
+
     void StartNewRound();
     bool CheckGameOverConditions(Game *game);
 };

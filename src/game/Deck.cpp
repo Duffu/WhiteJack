@@ -14,10 +14,6 @@ void Deck::Shuffle()
 }
 Card Deck::DealCard()
 {
-    if (m_cards.size() == penetration)
-    {
-        ResetAndShuffle();
-    }
     Card dealtCard = m_cards.back();
     m_cards.pop_back();
     return dealtCard;

@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 if(EMSCRIPTEN)
  set(PLATFORM "Web" CACHE STRING "Raylib platform" FORCE)
 endif()
-# --- END FIX PART 1 ---
 # -----------------------------------------------------------
 
 add_subdirectory(raylib EXCLUDE_FROM_ALL)
@@ -32,7 +31,9 @@ set(SOURCE_FILES
   src/states/StateMainMenu.cpp
   src/states/StateGameOver.cpp
 
-  
+  src/cheats/Peek.cpp
+  src/cheats/PeekHoleCard.cpp
+
 
 
   src/managers/ResourceManager.cpp

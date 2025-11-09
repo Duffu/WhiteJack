@@ -4,7 +4,7 @@
 #include <random>
 #include "core/Utils.h"
 #include "core/Game.h"
-StateGameplay::StateGameplay()
+StateGameplay::StateGameplay() : m_peek(m_deck), m_peekHoleCard(m_player)
 {
 }
 StateGameplay::~StateGameplay()
@@ -25,6 +25,9 @@ void StateGameplay::Update(float dt, Game *game)
         break;
     case RoundPhase::RESOLVE:
         UpdateResolve(dt, game);
+        break;
+    case RoundPhase::CHEATING:
+        UpdateCheating(dt, game);
         break;
     default:
         break;
@@ -59,6 +62,10 @@ void StateGameplay::Draw()
         m_uiManager.DrawRoundPush({50, 400});
         break;
     }
+    if (m_currentPhase == RoundPhase::CHEATING && m_currentCheat != nullptr)
+    {
+        m_currentCheat->Draw(m_uiManager);
+    }
 }
 
 void StateGameplay::OnEnter()
@@ -68,6 +75,7 @@ void StateGameplay::OnEnter()
 void StateGameplay::OnExit()
 {
 }
+
 void StateGameplay::UpdateClientTurn(float dt, Game *game)
 {
     UpdateTimer(m_aiDecisionTimer, dt);
@@ -75,6 +83,10 @@ void StateGameplay::UpdateClientTurn(float dt, Game *game)
     if (!TimerDone(m_aiDecisionTimer))
     {
         return; // AI is thinking don't do anythink
+    }
+    if (m_client.getHand().GetValue() > 21)
+    {
+        m_currentPhase = RoundPhase::RESOLVE;
     }
 
     if (m_client.getHand().GetValue() < 16 || getRandomInt(0, 100) <= 10)
@@ -103,7 +115,18 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
     */
     if (IsKeyPressed(KEY_F))
     {
-        m_player.getHand().GetLastCard().FlipCard();
+        if (!(m_player.getHand().GetLastCard().getIsFaceUp()))
+        {
+            m_player.getHand().GetLastCard().FlipCard();
+        }
+        else
+        {
+            m_player.modifyTrustHearts(-1);
+            if (CheckGameOverConditions(game))
+            {
+                return;
+            }
+        }
     }
     if (IsKeyPressed(KEY_H) && m_player.getHand().GetLastCard().getIsFaceUp() == true)
     {
@@ -118,7 +141,6 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         else
         {
             m_player.getHand().AddCard(m_deck.DealCard());
-            m_player.getHand().GetLastCard().FlipCard();
 
             if (m_player.getHand().GetValue() > 21)
             {
@@ -128,10 +150,60 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
     }
     else if (IsKeyPressed(KEY_S))
     {
-        m_currentPhase = RoundPhase::RESOLVE;
+        if (m_player.getHand().GetValue() < 17)
+        {
+            m_player.modifyTrustHearts(-1);
+            if (CheckGameOverConditions(game))
+            {
+                return;
+            }
+        }
+        else
+        {
+            m_currentPhase = RoundPhase::RESOLVE;
+        }
+    }
+    else if (IsKeyPressed(KEY_P))
+    {
+        m_currentCheat = &m_peek;
+        m_currentCheat->Start();
+        m_currentPhase = RoundPhase::CHEATING;
+    }
+    else if (IsKeyPressed(KEY_M))
+    {
+        m_currentCheat = &m_peekHoleCard;
+        m_currentCheat->Start();
+        m_currentPhase = RoundPhase::CHEATING;
+    }
+    else if (IsKeyPressed(KEY_L))
+    {
     }
 }
+void StateGameplay::UpdateCheating(float dt, Game *game)
+{
+    m_currentCheat->Update(dt);
+    CheatState state = m_currentCheat->GetState();
 
+    if (state == CheatState::RUNNING || state == CheatState::REWARD)
+    {
+        return; // DO NOTHING WE ARE STILL CHEATING
+    }
+    if (state == CheatState::FAIL)
+    {
+        m_player.modifyTrustHearts(-1);
+        if (CheckGameOverConditions(game))
+        {
+            return;
+        }
+        m_currentPhase = RoundPhase::PLAYER_TURN; // lose a heart continue playing
+    }
+    if (state == CheatState::SUCCESS)
+    {
+
+        m_currentPhase = RoundPhase::PLAYER_TURN; // Cheat was a success continue playing
+    }
+    m_currentCheat = nullptr;
+}
 void StateGameplay::UpdateResolve(float dt, Game *game)
 {
 
@@ -240,8 +312,14 @@ void StateGameplay::StartNewRound()
 {
     m_player.getHand().Clear();
     m_client.getHand().Clear();
-    m_deck.Shuffle();
-
+    if (m_deck.GetRemainingCount() == 52)
+    {
+        m_deck.Shuffle();
+    }
+    if (m_deck.GetRemainingCount() <= m_deck.GetPenetration())
+    {
+        m_deck.ResetAndShuffle();
+    }
     m_winState = WinState::NONE;
     m_currentPhase = RoundPhase::DEALING;
     m_cardsDealtCount = 0;
