@@ -2,9 +2,11 @@
 #include "Game.h"
 #include "raylib.h"
 #include "Constants.h"
+#include "managers/ResourceManager.h"
 Game::Game() : m_running(true), m_currentState(nullptr)
 {
     Init();
+    PlayMusicStream(ResourceManager::GetInstance().GetBackgroundMusic());
 }
 Game::~Game()
 {
@@ -41,6 +43,7 @@ void Game::Run()
             m_currentState->Update(dt, this);
         }
         Draw();
+        UpdateMusicStream(ResourceManager::GetInstance().GetBackgroundMusic());
     }
 }
 void Game::Update(float dt)

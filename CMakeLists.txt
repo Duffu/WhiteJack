@@ -30,6 +30,8 @@ set(SOURCE_FILES
   src/states/StateGameplay.cpp
   src/states/StateMainMenu.cpp
   src/states/StateGameOver.cpp
+  src/states/StateGuide.cpp
+
 
   src/cheats/Peek.cpp
   src/cheats/PeekHoleCard.cpp
@@ -66,7 +68,8 @@ if(EMSCRIPTEN)
   set(CMAKE_EXE_LINKER_FLAGS
  "-s ASYNCIFY \
   -s ALLOW_MEMORY_GROWTH \
- --preload-file ${CMAKE_SOURCE_DIR}/assets@assets"
+ --preload-file ${CMAKE_SOURCE_DIR}/assets@assets \
+ --preload-file ${CMAKE_SOURCE_DIR}/sound@sound"
   CACHE STRING "Emscripten Linker Flags" FORCE)
 endif()
 # -----------------------------------------------------------

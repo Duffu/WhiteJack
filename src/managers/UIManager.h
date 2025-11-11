@@ -27,4 +27,6 @@ public:
     void DrawBar(int posX, int posY, int width, int height);
     void DrawArrow(int posX, int posY, int width, int height);
     void DrawCardBack(int posX, int posY);
+    void DrawTips(int posX, int posY);
+    void DrawRewatchGuide(int posX, int posY);
 };

@@ -123,12 +123,12 @@ void PeekHoleCard::Start()
     for (int i = 0; i < 3; ++i)
     {
         float randomY = (float)getRandomInt(30, 370); // 400 (bar) - 30 (zone)
-        float zoneHeight = 30.0f;                     // "Smaller zones"
+        float zoneHeight = 35.0f;                     // "Smaller zones"
         m_successZones[i] = {100, m_bar.y + randomY, 30, zoneHeight};
     }
     m_arrow = {100, 200, 30, 5};
     m_currentZoneToHit = 0;
-    m_arrowSpeed = 250.0f; // Pixels per second
+    m_arrowSpeed = 230.0f; // Pixels per second
     m_currentState = CheatState::RUNNING;
     m_arrowState = ArrowState::MOVING_DOWN;
     m_arrow.y = m_bar.y;

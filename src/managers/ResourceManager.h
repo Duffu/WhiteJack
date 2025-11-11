@@ -10,6 +10,8 @@ class ResourceManager
 {
 private:
     std::map<std::string, Texture2D> m_textures;
+    Sound m_hurtSound;
+    Music m_backgroundMusic;
     ResourceManager();
     ~ResourceManager();
 
@@ -24,4 +26,6 @@ public:
     void LoadTexture(const std::string &name, const std::string &filePath);
     Texture2D GetTexture(const std::string &name);
     Texture2D GetTexture(const Card &card);
+    Sound &GetHurtSound();
+    Music &GetBackgroundMusic();
 };

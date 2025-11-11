@@ -4,6 +4,7 @@
 #include <random>
 #include "core/Utils.h"
 #include "core/Game.h"
+#include "StateGuide.h"
 StateGameplay::StateGameplay() : m_peek(m_deck), m_peekHoleCard(m_player), m_swap(m_deck, m_player)
 {
 }
@@ -12,6 +13,11 @@ StateGameplay::~StateGameplay()
 }
 void StateGameplay::Update(float dt, Game *game)
 {
+    if (IsKeyPressed(KEY_G))
+    {
+        game->ChangeState(new StateGuide());
+        return;
+    }
     switch (m_currentPhase)
     {
     case RoundPhase::DEALING:
@@ -38,8 +44,14 @@ void StateGameplay::Draw()
     m_uiManager.DrawHand(m_player.getHand(), {500, 600});
     m_uiManager.DrawHand(m_client.getHand(), {500, 100});
     m_uiManager.DrawValue(m_player.getHand().GetValue(), {800, 550});
+    m_uiManager.DrawScore(m_player.getScore(), {400, 50});
     m_uiManager.DrawValue(m_client.getHand().GetValue(), {800, 150});
+    m_uiManager.DrawRewatchGuide(970, 100);
+    m_uiManager.DrawTips(900, 350);
+
     Rectangle patienceBar = {100, 50, 200, 30};
+
+    DrawText("Patience Bar", patienceBar.x, patienceBar.y - (patienceBar.height + 5), 20, WHITE);
     m_uiManager.DrawMeter(
         m_client.getPatience(),
         m_client.getMaxPatience(),
@@ -70,6 +82,13 @@ void StateGameplay::Draw()
 
 void StateGameplay::OnEnter()
 {
+
+    Music &bgm = ResourceManager::GetInstance().GetBackgroundMusic();
+    Sound &hurt = ResourceManager::GetInstance().GetHurtSound();
+    SetMusicVolume(bgm, 0.1f);
+    SetSoundVolume(hurt, 0.7f);
+    m_player.resetScore();
+
     StartNewRound();
 }
 void StateGameplay::OnExit()
@@ -88,8 +107,8 @@ void StateGameplay::UpdateClientTurn(float dt, Game *game)
     {
         m_currentPhase = RoundPhase::RESOLVE;
     }
-
-    if (m_client.getHand().GetValue() < 16 || getRandomInt(0, 100) <= 10)
+    //                                                      random chance for client to decide to hit on 17 and 16
+    if (m_client.getHand().GetValue() < 16 || (getRandomInt(0, 100) <= 10 && m_client.getHand().GetValue() <= 17))
     {
         m_client.getHand().AddCard(m_deck.DealCard());
         m_client.getHand().GetLastCard().FlipCard();
@@ -122,6 +141,14 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         else
         {
             m_player.modifyTrustHearts(-1);
+
+            Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
+
+            if (IsSoundPlaying(hurtSound))
+            {
+                StopSound(hurtSound);
+            }
+            PlaySound(hurtSound);
             if (CheckGameOverConditions(game))
             {
                 return;
@@ -133,8 +160,17 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         if (m_player.getHand().GetValue() >= 17)
         {
             m_player.modifyTrustHearts(-1);
+
+            Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
+
+            if (IsSoundPlaying(hurtSound))
+            {
+                StopSound(hurtSound);
+            }
+            PlaySound(hurtSound);
             if (CheckGameOverConditions(game))
             {
+
                 return;
             }
         }
@@ -153,6 +189,14 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         if (m_player.getHand().GetValue() < 17)
         {
             m_player.modifyTrustHearts(-1);
+
+            Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
+
+            if (IsSoundPlaying(hurtSound))
+            {
+                StopSound(hurtSound);
+            }
+            PlaySound(hurtSound);
             if (CheckGameOverConditions(game))
             {
                 return;
@@ -194,6 +238,14 @@ void StateGameplay::UpdateCheating(float dt, Game *game)
     if (state == CheatState::FAIL)
     {
         m_player.modifyTrustHearts(-1);
+
+        Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
+
+        if (IsSoundPlaying(hurtSound))
+        {
+            StopSound(hurtSound);
+        }
+        PlaySound(hurtSound);
         if (CheckGameOverConditions(game))
         {
             return;
@@ -225,6 +277,7 @@ void StateGameplay::UpdateResolve(float dt, Game *game)
         }
         else if (clientValue > 21)
         {
+            m_player.addScore(getRandomInt(1000, 2000));
             m_client.modifyPatience(-20);
             if (CheckGameOverConditions(game))
             {
@@ -235,6 +288,7 @@ void StateGameplay::UpdateResolve(float dt, Game *game)
         }
         else if (playerValue > clientValue)
         {
+            m_player.addScore(getRandomInt(1800, 2500));
             m_client.modifyPatience(-10);
             if (CheckGameOverConditions(game))
             {
@@ -313,6 +367,7 @@ void StateGameplay::UpdateDealing(float dt, Game *game)
 
 void StateGameplay::StartNewRound()
 {
+    StopSound(ResourceManager::GetInstance().GetHurtSound());
     m_player.getHand().Clear();
     m_client.getHand().Clear();
     if (m_deck.GetRemainingCount() == 52)
