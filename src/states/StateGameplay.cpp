@@ -48,8 +48,8 @@ void StateGameplay::Draw()
     m_uiManager.DrawScore(m_player.getScore(), {400, 50});
     m_uiManager.DrawValue(m_client.getHand().GetValue(), {800, 150});
     m_uiManager.DrawRewatchGuide(970, 100);
-    m_uiManager.DrawTips(900, 350);
-
+    m_uiManager.DrawTips(870, 350);
+    m_uiManager.DrawPlayer(400, 600);
     Rectangle patienceBar = {100, 50, 200, 30};
 
     DrawText("Patience Bar", patienceBar.x, patienceBar.y - (patienceBar.height + 5), 20, WHITE);
@@ -61,7 +61,7 @@ void StateGameplay::Draw()
     m_uiManager.DrawHealthBar(
         m_player.getTrustHearts(),
         m_player.getMaxTrustHearts(),
-        {1100, 50});
+        {1000, 50});
 
     switch (m_winState)
     {

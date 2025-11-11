@@ -29,4 +29,5 @@ public:
     void DrawCardBack(int posX, int posY);
     void DrawTips(int posX, int posY);
     void DrawRewatchGuide(int posX, int posY);
+    void DrawPlayer(int posX, int posY);
 };

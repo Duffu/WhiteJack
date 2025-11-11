@@ -175,3 +175,9 @@ void UIManager::DrawRewatchGuide(int posX, int posY)
     DrawText(rewatch1, posX, posY, 17, WHITE);
     DrawText(rewatch2, posX, posY + 20, 17, WHITE);
 }
+
+void UIManager::DrawPlayer(int posX, int posY)
+{
+    const char *player = "Player :";
+    DrawText(player, posX, posY, 22, WHITE);
+}
