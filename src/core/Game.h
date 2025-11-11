@@ -9,6 +9,8 @@ private:
     void Shutdown();
     bool m_running;
     IGameState *m_currentState;
+    double m_debugUpdateDuration;
+    double m_debugDrawDuration;
 
 public:
     Game();

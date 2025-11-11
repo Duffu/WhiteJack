@@ -1,7 +1,9 @@
 #include "Card.h"
+#include "core/Utils.h"
 
 Card::Card(Suit suit, Rank rank, bool m_isFaceUp) : m_suit(suit), m_rank(rank), m_isFaceUp(false)
 {
+    m_textureName = RankToString(m_rank) + "_of_" + SuitToString(m_suit);
 }
 
 Card::~Card()

@@ -67,7 +67,6 @@ ResourceManager::ResourceManager()
         LoadTexture(textureName, filePath);
     }
     // TODO FIX THE DELAY
-    InitAudioDevice();
 
     m_backgroundMusic = LoadMusicStream("sounds/background.ogg");
     m_backgroundMusic.looping = true;
@@ -82,7 +81,6 @@ ResourceManager::~ResourceManager()
     }
     UnloadMusicStream(m_backgroundMusic);
     UnloadSound(m_hurtSound);
-    CloseAudioDevice();
 }
 
 void ResourceManager::LoadTexture(const std::string &name, const std::string &filePath)
@@ -105,7 +103,7 @@ Texture2D ResourceManager::GetTexture(const Card &card)
     std::string cardRank = RankToString(card.GetRank());
     std::string cardSuit = SuitToString(card.GetSuit());
     std::string textureName = cardRank + "_of_" + cardSuit;
-    return m_textures.at(textureName);
+    return m_textures.at(card.GetTextureName());
 }
 
 Sound &ResourceManager::GetHurtSound()

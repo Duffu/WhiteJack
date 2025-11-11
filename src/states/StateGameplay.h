@@ -45,6 +45,7 @@ private:
     PeekHoleCard m_peekHoleCard;
     Swap m_swap;
     ICheat *m_currentCheat;
+    Sound m_hurtSound;
 
 public:
     StateGameplay();

@@ -1,4 +1,6 @@
 #include "Deck.h"
+#include "core/Utils.h"
+#include <random>
 
 Deck::Deck()
 {
@@ -9,8 +11,7 @@ Deck::~Deck()
 }
 void Deck::Shuffle()
 {
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    std::shuffle(m_cards.begin(), m_cards.end(), std::default_random_engine(std::rand()));
+    std::shuffle(m_cards.begin(), m_cards.end(), g_randomEngine);
 }
 Card Deck::DealCard()
 {

@@ -290,11 +290,11 @@ void StateGuide::Draw()
         const char *title = "Cheats & Combos";
         const char *line1 = "[P] - Peek at Deck";
         const char *line2 = "Lets you see the *next* card in the deck.";
-        const char *line3 = "[E] - Peek at Hand";
+        const char *line3 = "[M] - Peek at Hand";
         const char *line4 = "Lets you see your *own* face-down hole card.";
         const char *line5 = "[L] - Swap Card";
         const char *line6 = "Lets you swap your hole card with the top card of the deck.";
-        const char *line7 = "Tip: Use [P] and [E] first to know if the [L] swap is a good idea!";
+        const char *line7 = "Tip: Use [P] and [M] first to know if the [L] swap is a good idea!";
 
         // Draw the text
         DrawText(TextSubtext(title, 0, charCount), (1280 - MeasureText(title, 40)) / 2, y, 40, YELLOW);
@@ -362,7 +362,7 @@ void StateGuide::Draw()
         const char *line1 = "Each cheat opens a fast-paced minigame.";
         const char *line2 = "Peek at Deck [P]:";
         const char *line3 = "A bar with a moving arrow. Hit SPACE in the green zone.";
-        const char *line4 = "Peek at Hand [E]:";
+        const char *line4 = "Peek at Hand [M]:";
         const char *line5 = "A harder version. You must hit 3 smaller, random zones.";
         const char *line6 = "Swap Card [L]:";
         const char *line7 = "A card appears randomly. Click it 5 times before the timer runs out.";

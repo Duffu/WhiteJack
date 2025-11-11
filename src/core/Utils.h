@@ -1,6 +1,8 @@
 #pragma once
 #include "game/Card.h"
 #include <random>
+extern std::mt19937 g_randomEngine;
+
 struct Timer
 {
     float lifetime = 0.0f;

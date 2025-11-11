@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 enum class Suit
 {
     HEARTS,
@@ -28,6 +29,7 @@ private:
     Suit m_suit;
     Rank m_rank;
     bool m_isFaceUp;
+    std::string m_textureName;
 
 public:
     Card(Suit m_suit, Rank m_rank, bool m_isFaceUp = false);
@@ -37,4 +39,5 @@ public:
     void FlipCard() { m_isFaceUp = !m_isFaceUp; }
     Suit GetSuit() const;
     Rank GetRank() const;
+    const std::string &GetTextureName() const { return m_textureName; }
 };

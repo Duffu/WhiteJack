@@ -7,6 +7,7 @@
 #include "StateGuide.h"
 StateGameplay::StateGameplay() : m_peek(m_deck), m_peekHoleCard(m_player), m_swap(m_deck, m_player)
 {
+    m_hurtSound = ResourceManager::GetInstance().GetHurtSound();
 }
 StateGameplay::~StateGameplay()
 {
@@ -84,9 +85,9 @@ void StateGameplay::OnEnter()
 {
 
     Music &bgm = ResourceManager::GetInstance().GetBackgroundMusic();
-    Sound &hurt = ResourceManager::GetInstance().GetHurtSound();
     SetMusicVolume(bgm, 0.1f);
-    SetSoundVolume(hurt, 0.7f);
+
+    SetSoundVolume(m_hurtSound, 0.7f);
     m_player.resetScore();
 
     StartNewRound();
@@ -142,13 +143,10 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         {
             m_player.modifyTrustHearts(-1);
 
-            Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
-
-            if (IsSoundPlaying(hurtSound))
+            if (!IsSoundPlaying(m_hurtSound))
             {
-                StopSound(hurtSound);
+                PlaySound(m_hurtSound);
             }
-            PlaySound(hurtSound);
             if (CheckGameOverConditions(game))
             {
                 return;
@@ -161,13 +159,10 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         {
             m_player.modifyTrustHearts(-1);
 
-            Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
-
-            if (IsSoundPlaying(hurtSound))
+            if (!IsSoundPlaying(m_hurtSound))
             {
-                StopSound(hurtSound);
+                PlaySound(m_hurtSound);
             }
-            PlaySound(hurtSound);
             if (CheckGameOverConditions(game))
             {
 
@@ -190,13 +185,10 @@ void StateGameplay::UpdatePlayerTurn(float dt, Game *game)
         {
             m_player.modifyTrustHearts(-1);
 
-            Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
-
-            if (IsSoundPlaying(hurtSound))
+            if (!IsSoundPlaying(m_hurtSound))
             {
-                StopSound(hurtSound);
+                PlaySound(m_hurtSound);
             }
-            PlaySound(hurtSound);
             if (CheckGameOverConditions(game))
             {
                 return;
@@ -239,13 +231,10 @@ void StateGameplay::UpdateCheating(float dt, Game *game)
     {
         m_player.modifyTrustHearts(-1);
 
-        Sound &hurtSound = ResourceManager::GetInstance().GetHurtSound();
-
-        if (IsSoundPlaying(hurtSound))
+        if (!IsSoundPlaying(m_hurtSound))
         {
-            StopSound(hurtSound);
+            PlaySound(m_hurtSound);
         }
-        PlaySound(hurtSound);
         if (CheckGameOverConditions(game))
         {
             return;
@@ -367,7 +356,7 @@ void StateGameplay::UpdateDealing(float dt, Game *game)
 
 void StateGameplay::StartNewRound()
 {
-    StopSound(ResourceManager::GetInstance().GetHurtSound());
+    StopSound(m_hurtSound);
     m_player.getHand().Clear();
     m_client.getHand().Clear();
     if (m_deck.GetRemainingCount() == 52)

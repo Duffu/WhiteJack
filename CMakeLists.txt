@@ -69,7 +69,7 @@ if(EMSCRIPTEN)
  "-s ASYNCIFY \
   -s ALLOW_MEMORY_GROWTH \
  --preload-file ${CMAKE_SOURCE_DIR}/assets@assets \
- --preload-file ${CMAKE_SOURCE_DIR}/sound@sound"
+ --preload-file ${CMAKE_SOURCE_DIR}/sounds@sounds"
   CACHE STRING "Emscripten Linker Flags" FORCE)
 endif()
 # -----------------------------------------------------------

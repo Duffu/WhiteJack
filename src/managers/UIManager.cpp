@@ -117,7 +117,7 @@ void UIManager::DrawTips(int posX, int posY)
     // Cheats
     const char *keyP = "[P]";
     const char *textP = "Peek Deck";
-    const char *keyE = "[E]";
+    const char *keyE = "[M]";
     const char *textE = "Peek Hand";
     const char *keyX = "[L]";
     const char *textX = "Swap Card";
