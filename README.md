@@ -1,5 +1,6 @@
 # WhiteJack
 You play as a dirty blackjack dealer
+Game on browser: https://duffu.github.io/WhiteJack-Demo-WebBuild
 
 Core 
   Language: C++
@@ -22,7 +23,7 @@ Key Architectural Patterns :
   Non-Blocking Timer System :
   to control all delayed actions
 
-  
+
 
 
 
